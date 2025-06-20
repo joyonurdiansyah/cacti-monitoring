@@ -1,0 +1,25 @@
+[2025-06-19 15:12:59] [ always  ] Spawning background process: c:/xampp/php/php.exe "C:/xampp/htdocs/cacti/install/background.php" 1750338779.8891
+[2025-06-19 15:13:00] [ always  ] Setting PHP Option max_execution_time = 0
+[2025-06-19 15:13:00] [ always  ] Setting PHP Option memory_limit = -1
+[2025-06-19 15:13:02] [ always  ] Starting INSTALL Process for v1.2.15
+[2025-06-19 15:13:02] [ always  ] Found 4 tables to convert
+[2025-06-19 15:13:02] [ always  ] Converting Table #1 'time_zone'
+[2025-06-19 15:13:02] [ always  ] Converting Table #2 'time_zone_name'
+[2025-06-19 15:13:03] [ always  ] Converting Table #3 'time_zone_transition'
+[2025-06-19 15:13:03] [ always  ] Converting Table #4 'time_zone_transition_type'
+[2025-06-19 15:13:04] [ always  ] Found 3 templates to install
+[2025-06-19 15:13:04] [ always  ] About to import Package #1 'Generic_SNMP_Device.xml.gz'.
+[2025-06-19 15:13:12] [ always  ] Import of Package #1 'Generic_SNMP_Device.xml.gz' under Profile '1' succeeded
+[2025-06-19 15:13:12] [ always  ] About to import Package #2 'Local_Linux_Machine.xml.gz'.
+[2025-06-19 15:13:14] [ always  ] Import of Package #2 'Local_Linux_Machine.xml.gz' under Profile '1' succeeded
+[2025-06-19 15:13:14] [ always  ] About to import Package #3 'NetSNMP_Device.xml.gz'.
+[2025-06-19 15:13:34] [ always  ] Import of Package #3 'NetSNMP_Device.xml.gz' under Profile '1' succeeded
+[2025-06-19 15:13:34] [ always  ] Repairing Automation Rules
+[2025-06-19 15:13:34] [ always  ] Mapping Automation Template for Device Template 'Net-SNMP Device'
+[2025-06-19 15:13:34] [ always  ] Updating automation network (1), mode "on" => "", subnet "192.168.1.0/24" => 192.168.1.0/24"
+[2025-06-19 15:13:34] [ always  ] WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server.
+[2025-06-19 15:13:34] [ always  ] Repopulating poller cache
+[2025-06-19 15:13:34] [ always  ] Repopulating SNMP Agent cache
+[2025-06-19 15:13:35] [ always  ] Generating RSA Key Pair
+[2025-06-19 15:13:35] [ always  ] Finished INSTALL Process for v1.2.15
+[2025-06-19 15:13:35] [ always  ] Installation was started at 2025-06-19 13:13:00, completed at 2025-06-19 13:13:35

@@ -1,0 +1,198 @@
+2025/06/19 10:55:07 - AUTH LOGIN: User 'admin' Authenticated
+2025/06/19 14:52:03 - AUTH LOGIN: Local Login Failed for user 'admin' from IP Address '::1'.
+2025/06/19 14:52:16 - AUTH LOGIN: Local Login Failed for user 'admin' from IP Address '::1'.
+2025/06/19 14:52:20 - AUTH LOGIN: User 'admin' Authenticated
+2025-06-19 15:12:59 - INSTALL: always: Spawning background process: c:/xampp/php/php.exe "C:/xampp/htdocs/cacti/install/background.php" 1750338779.8891
+2025-06-19 15:13:00 - INSTALL: Checking arguments
+2025-06-19 15:13:00 - INSTALL: always: Setting PHP Option max_execution_time = 0
+2025-06-19 15:13:00 - INSTALL: always: Setting PHP Option memory_limit = -1
+2025-06-19 15:13:02 - INSTALL: always: Starting INSTALL Process for v1.2.15
+2025-06-19 15:13:02 - INSTALL: always: Found 4 tables to convert
+2025-06-19 15:13:02 - INSTALL: always: Converting Table #1 'time_zone'
+2025-06-19 15:13:02 - INSTALL: always: Converting Table #2 'time_zone_name'
+2025-06-19 15:13:03 - INSTALL: always: Converting Table #3 'time_zone_transition'
+2025-06-19 15:13:03 - INSTALL: always: Converting Table #4 'time_zone_transition_type'
+2025-06-19 15:13:04 - INSTALL: always: Found 3 templates to install
+2025-06-19 15:13:04 - INSTALL: always: About to import Package #1 'Generic_SNMP_Device.xml.gz'.
+2025-06-19 15:13:04 - IMPORT NOTE: Got Package Signature
+2025-06-19 15:13:04 - IMPORT NOTE: File is Signed Correctly
+2025-06-19 15:13:04 - IMPORT Loading Plugin Information from package
+2025-06-19 15:13:04 - IMPORT Verifying each files signature
+2025-06-19 15:13:04 - IMPORT NOTE: File OK: scripts/ss_hstats.php
+2025-06-19 15:13:04 - IMPORT NOTE: File OK: scripts/ping.pl
+2025-06-19 15:13:04 - IMPORT NOTE: File OK: resource/snmp_queries/interface.xml
+2025-06-19 15:13:04 - IMPORT NOTE: File OK: Generic_SNMP_Device.xml
+2025-06-19 15:13:04 - IMPORT Writing Files
+2025-06-19 15:13:04 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/ss_hstats.php
+2025-06-19 15:13:04 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/ss_hstats.php, with Status written
+2025-06-19 15:13:04 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/ping.pl
+2025-06-19 15:13:04 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/ping.pl, with Status written
+2025-06-19 15:13:04 - IMPORT Writing file: C:/xampp/htdocs/cacti/resource/snmp_queries/interface.xml
+2025-06-19 15:13:04 - IMPORT Write Status file: C:/xampp/htdocs/cacti/resource/snmp_queries/interface.xml, with Status written
+2025-06-19 15:13:04 - IMPORT Importing XML Data for Generic_SNMP_Device.xml
+2025-06-19 15:13:12 - IMPORT File creation complete
+2025-06-19 15:13:12 - INSTALL: always: Import of Package #1 'Generic_SNMP_Device.xml.gz' under Profile '1' succeeded
+2025-06-19 15:13:12 - INSTALL: always: About to import Package #2 'Local_Linux_Machine.xml.gz'.
+2025-06-19 15:13:12 - IMPORT NOTE: Got Package Signature
+2025-06-19 15:13:12 - IMPORT NOTE: File is Signed Correctly
+2025-06-19 15:13:12 - IMPORT Loading Plugin Information from package
+2025-06-19 15:13:12 - IMPORT Verifying each files signature
+2025-06-19 15:13:12 - IMPORT NOTE: File OK: scripts/unix_processes.pl
+2025-06-19 15:13:12 - IMPORT NOTE: File OK: scripts/loadavg_multi.pl
+2025-06-19 15:13:12 - IMPORT NOTE: File OK: scripts/unix_users.pl
+2025-06-19 15:13:12 - IMPORT NOTE: File OK: scripts/linux_memory.pl
+2025-06-19 15:13:12 - IMPORT NOTE: File OK: resource/script_queries/unix_disk.xml
+2025-06-19 15:13:12 - IMPORT NOTE: File OK: scripts/query_unix_partitions.pl
+2025-06-19 15:13:12 - IMPORT NOTE: File OK: Local_Linux_Machine.xml
+2025-06-19 15:13:12 - IMPORT Writing Files
+2025-06-19 15:13:12 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/unix_processes.pl
+2025-06-19 15:13:12 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/unix_processes.pl, with Status written
+2025-06-19 15:13:12 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/loadavg_multi.pl
+2025-06-19 15:13:12 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/loadavg_multi.pl, with Status written
+2025-06-19 15:13:12 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/unix_users.pl
+2025-06-19 15:13:12 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/unix_users.pl, with Status written
+2025-06-19 15:13:12 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/linux_memory.pl
+2025-06-19 15:13:12 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/linux_memory.pl, with Status written
+2025-06-19 15:13:12 - IMPORT Writing file: C:/xampp/htdocs/cacti/resource/script_queries/unix_disk.xml
+2025-06-19 15:13:12 - IMPORT Write Status file: C:/xampp/htdocs/cacti/resource/script_queries/unix_disk.xml, with Status written
+2025-06-19 15:13:12 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/query_unix_partitions.pl
+2025-06-19 15:13:12 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/query_unix_partitions.pl, with Status written
+2025-06-19 15:13:12 - IMPORT Importing XML Data for Local_Linux_Machine.xml
+2025-06-19 15:13:14 - IMPORT File creation complete
+2025-06-19 15:13:14 - INSTALL: always: Import of Package #2 'Local_Linux_Machine.xml.gz' under Profile '1' succeeded
+2025-06-19 15:13:14 - INSTALL: always: About to import Package #3 'NetSNMP_Device.xml.gz'.
+2025-06-19 15:13:14 - IMPORT NOTE: Got Package Signature
+2025-06-19 15:13:14 - IMPORT NOTE: File is Signed Correctly
+2025-06-19 15:13:14 - IMPORT Loading Plugin Information from package
+2025-06-19 15:13:14 - IMPORT Verifying each files signature
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: scripts/ss_hstats.php
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: scripts/ss_net_snmp_disk_io.php
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: scripts/ss_net_snmp_disk_bytes.php
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: resource/snmp_queries/interface.xml
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: resource/snmp_queries/net-snmp_disk.xml
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: resource/script_server/host_disk.xml
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: resource/script_server/host_cpu.xml
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: resource/snmp_queries/net-snmp_devio.xml
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: scripts/ss_host_disk.php
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: scripts/ss_host_cpu.php
+2025-06-19 15:13:14 - IMPORT NOTE: File OK: NetSNMP_Device.xml
+2025-06-19 15:13:14 - IMPORT Writing Files
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/ss_hstats.php
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/ss_hstats.php, with Status written
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/ss_net_snmp_disk_io.php
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/ss_net_snmp_disk_io.php, with Status written
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/ss_net_snmp_disk_bytes.php
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/ss_net_snmp_disk_bytes.php, with Status written
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/resource/snmp_queries/interface.xml
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/resource/snmp_queries/interface.xml, with Status written
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/resource/snmp_queries/net-snmp_disk.xml
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/resource/snmp_queries/net-snmp_disk.xml, with Status written
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/resource/script_server/host_disk.xml
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/resource/script_server/host_disk.xml, with Status written
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/resource/script_server/host_cpu.xml
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/resource/script_server/host_cpu.xml, with Status written
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/resource/snmp_queries/net-snmp_devio.xml
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/resource/snmp_queries/net-snmp_devio.xml, with Status written
+2025-06-19 15:13:14 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/ss_host_disk.php
+2025-06-19 15:13:14 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/ss_host_disk.php, with Status written
+2025-06-19 15:13:15 - IMPORT Writing file: C:/xampp/htdocs/cacti/scripts/ss_host_cpu.php
+2025-06-19 15:13:15 - IMPORT Write Status file: C:/xampp/htdocs/cacti/scripts/ss_host_cpu.php, with Status written
+2025-06-19 15:13:15 - IMPORT Importing XML Data for NetSNMP_Device.xml
+2025-06-19 15:13:34 - IMPORT File creation complete
+2025-06-19 15:13:34 - INSTALL: always: Import of Package #3 'NetSNMP_Device.xml.gz' under Profile '1' succeeded
+2025-06-19 15:13:34 - INSTALL: always: Repairing Automation Rules
+2025-06-19 15:13:34 - INSTALL: always: Mapping Automation Template for Device Template 'Net-SNMP Device'
+2025-06-19 15:13:34 - INSTALL-AUTOMATION: always: Setting default data source profile to 5 Minute Collection (1)
+2025-06-19 15:13:34 - INSTALL: always: Updating automation network (1), mode "on" => "", subnet "192.168.1.0/24" => 192.168.1.0/24"
+2025-06-19 15:13:34 - INSTALL: always: WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server.
+2025-06-19 15:13:34 - INSTALL: always: Repopulating poller cache
+2025-06-19 15:13:34 - INSTALL: always: Repopulating SNMP Agent cache
+2025-06-19 15:13:35 - INSTALL: always: Generating RSA Key Pair
+2025-06-19 15:13:35 - INSTALL: always: Finished INSTALL Process for v1.2.15
+2025-06-19 15:13:35 - INSTALL-SYNC: always: No Remote Data Collectors found for full syncronization
+2025-06-19 15:13:35 - INSTALL: always: Installation was started at 2025-06-19 13:13:00, completed at 2025-06-19 13:13:35
+2025-06-20 02:38:01 - AUTH LOGIN: User 'admin' Authenticated
+2025-06-20 02:55:54 - SYSTEM STATS: Time:1.2008 Method:cmd.php Processes:1 Threads:0 Hosts:0 HostsPerProcess:0 DataSources:0 RRDsProcessed:0
+2025-06-20 02:55:55 - AUTOM8 [PID: 19916] WARNING: The Network ID: 1 is disabled.  You must use the 'force' option to force it's execution.
+2025-06-20 02:57:51 - AUTOM8 NOTE: Graph Added - Device[1], Graph[1], DS[1]
+2025-06-20 02:57:51 - AUTOM8 NOTE: Graph Added - Device[1], Graph[2], DS[2]
+2025-06-20 02:57:51 - AUTOM8 NOTE: Graph Added - Device[1], Graph[3], DS[3]
+2025-06-20 02:57:51 - AUTOM8 NOTE: Graph Added - Device[1], Graph[4], DS[4]
+2025-06-20 03:00:24 - AUTH LOGIN: User 'admin' Authenticated
+2025-06-20 03:00:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[1] Device[1] Thread[1] DS[4]
+2025-06-20 03:00:55 - SYSTEM STATS: Time:2.4676 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:4 RRDsProcessed:4
+2025-06-20 03:05:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:05:54 - SYSTEM STATS: Time:1.8298 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:10:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:10:54 - SYSTEM STATS: Time:1.3297 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:10:54 - SYSTEM DSDEBUG STATS: Type:poller, ChecksPerformed:1, TotalIssues:0, Time:0.1686 
+2025-06-20 03:15:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:15:54 - SYSTEM STATS: Time:1.4965 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:15:54 - SYSTEM DSDEBUG STATS: Type:poller, ChecksPerformed:1, TotalIssues:0, Time:0.1673 
+2025-06-20 03:20:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:20:54 - SYSTEM STATS: Time:1.5066 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:25:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:25:54 - SYSTEM STATS: Time:1.3779 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:30:53 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:30:54 - SYSTEM STATS: Time:1.3428 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:35:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:35:55 - SYSTEM STATS: Time:1.4350 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:40:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:40:54 - SYSTEM STATS: Time:1.6601 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:45:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:45:54 - SYSTEM STATS: Time:1.4137 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:50:01 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:50:01 - SYSTEM STATS: Time:1.4743 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 03:55:53 - POLLER: Poller[1] WARNING: Scheduled Task is out of sync with the Poller Interval!  The Poller Interval is '300' seconds, with a maximum of a '300' second Scheduled Task, but 353.1 seconds have passed since the last poll!
+2025-06-20 03:55:53 - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email.
+2025-06-20 03:55:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[5] Device[1] Thread[1] DS[4, 5, 6, 7, 8]
+2025-06-20 03:55:54 - SYSTEM STATS: Time:1.4227 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:10 RRDsProcessed:9
+2025-06-20 04:00:55 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 04:00:55 - SYSTEM STATS: Time:2.5929 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:15 RRDsProcessed:13
+2025-06-20 04:05:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 04:05:54 - SYSTEM STATS: Time:1.4145 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:15 RRDsProcessed:13
+2025-06-20 04:09:57 - AUTOM8 NOTE: Graph Added - Device[1], Graph[9], DS[14]
+2025-06-20 04:10:34 - AUTOM8 NOTE: Graph Added - Device[1], Graph[10], DS[15, 15], Rule[1]
+2025-06-20 04:10:34 - AUTOM8 NOTE: Graph Added - Device[1], Graph[11], DS[9, 9], Rule[1]
+2025-06-20 04:10:34 - AUTOM8 NOTE: Graph Added - Device[1], Graph[12], DS[16, 16], Rule[1]
+2025-06-20 04:10:35 - AUTOM8 NOTE: Graph Added - Device[1], Graph[13], DS[17, 17], Rule[1]
+2025-06-20 04:10:35 - AUTOM8 NOTE: Graph Added - Device[1], Graph[14], DS[18, 18], Rule[1]
+2025-06-20 04:10:35 - AUTOM8 NOTE: Graph Added - Device[1], Graph[15], DS[19, 19], Rule[1]
+2025-06-20 04:10:36 - AUTOM8 NOTE: Graph Added - Device[1], Graph[16], DS[20, 20], Rule[1]
+2025-06-20 04:10:37 - AUTOM8 NOTE: Graph Added - Device[1], Graph[17], DS[21, 21], Rule[1]
+2025-06-20 04:10:37 - AUTOM8 NOTE: Graph Added - Device[1], Graph[18], DS[22, 22], Rule[1]
+2025-06-20 04:10:37 - AUTOM8 NOTE: Graph Added - Device[1], Graph[19], DS[23, 23], Rule[1]
+2025-06-20 04:10:38 - AUTOM8 NOTE: Graph Added - Device[1], Graph[20], DS[24, 24], Rule[1]
+2025-06-20 04:10:38 - AUTOM8 NOTE: Graph Added - Device[1], Graph[21], DS[25, 25], Rule[1]
+2025-06-20 04:10:55 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 04:10:56 - SYSTEM STATS: Time:2.7538 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 04:15:56 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 04:15:57 - SYSTEM STATS: Time:2.9105 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 04:20:54 - POLLER: Poller[1] Device[1] HT[1] DQ[1] RECACHE ASSERT FAILED 'l2tp-R-212MEDAN=
+2025-06-20 04:20:55 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 04:20:55 - SYSTEM STATS: Time:2.6518 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 04:20:56 - PCOMMAND Device[1] WARNING: Recache Event Detected for Device
+2025-06-20 04:20:58 - RECACHE STATS: Poller:1 RecacheTime:1.1305 DevicesRecached:1
+2025-06-20 04:25:54 - POLLER: Poller[1] Device[1] HT[1] DQ[1] RECACHE ASSERT FAILED 'l2tp-EkaSeptika=
+2025-06-20 04:25:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 04:25:55 - SYSTEM STATS: Time:2.6352 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 04:25:56 - PCOMMAND Device[1] WARNING: Recache Event Detected for Device
+2025-06-20 04:25:57 - RECACHE STATS: Poller:1 RecacheTime:1.1011 DevicesRecached:1
+2025-06-20 04:30:59 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 04:31:00 - SYSTEM STATS: Time:5.5710 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 09:35:56 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 09:35:56 - SYSTEM STATS: Time:2.7363 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 09:40:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 09:40:55 - SYSTEM STATS: Time:2.4104 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 09:45:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 09:45:55 - SYSTEM STATS: Time:2.6159 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 09:50:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 09:50:55 - SYSTEM STATS: Time:2.3632 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 09:55:56 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 09:55:57 - SYSTEM STATS: Time:2.6267 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 10:00:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 10:00:55 - SYSTEM STATS: Time:2.4278 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 10:05:54 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 10:05:55 - SYSTEM STATS: Time:2.6016 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
+2025-06-20 10:10:56 - POLLER: Poller[1] WARNING: Invalid Response(s), Errors[8] Device[1] Thread[1] DS[4, 5, 6, 7, 8, 10, 11, 12]
+2025-06-20 10:10:57 - SYSTEM STATS: Time:2.5831 Method:cmd.php Processes:1 Threads:0 Hosts:1 HostsPerProcess:1 DataSources:38 RRDsProcessed:25
