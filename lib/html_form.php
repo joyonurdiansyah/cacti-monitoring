@@ -41,83 +41,93 @@ function draw_edit_form($array) {
 		}
 	}
 
-	if (cacti_sizeof($fields_array) > 0) {
+	if (isset($fields_array) && cacti_sizeof($fields_array) > 0) {
 		if (!isset($config_array['no_form_tag'])) {
-			print "<form class='cactiForm' method='post' autocomplete='off' action='" . ((isset($config_array['post_to'])) ? $config_array['post_to'] : get_current_page()) . "'" . ((isset($config_array['form_name'])) ? " name='" . $config_array['form_name'] . "'" : '') . ((isset($config_array['enctype'])) ? " enctype='" . $config_array['enctype'] . "'" : '') . ">\n";
+			print "<form class='cactiForm' method='post' autocomplete='off' action='" .
+				(isset($config_array['post_to']) ? $config_array['post_to'] : get_current_page()) . "'" .
+				(isset($config_array['form_name']) ? " name='" . $config_array['form_name'] . "'" : '') .
+				(isset($config_array['enctype']) ? " enctype='" . $config_array['enctype'] . "'" : '') .
+				">\n";
 		}
 
 		$i = 0;
 		$row_class = 'odd';
 
 		foreach ($fields_array as $field_name => $field_array) {
-			if ($field_array['method'] == 'hidden') {
+			$method = isset($field_array['method']) ? $field_array['method'] : '';
+
+			if ($method == 'hidden') {
 				print '<div class="hidden formRow">';
-				form_hidden_box($field_name, $field_array['value'], ((isset($field_array['default'])) ? $field_array['default'] : ''), true);
+				form_hidden_box(
+					$field_name,
+					isset($field_array['value']) ? $field_array['value'] : '',
+					isset($field_array['default']) ? $field_array['default'] : '',
+					true
+				);
 				print '</div>';
-			} elseif ($field_array['method'] == 'hidden_zero') {
+			} elseif ($method == 'hidden_zero') {
 				print '<div class="hidden formRow">';
-				form_hidden_box($field_name, $field_array['value'], '0', true);
+				form_hidden_box(
+					$field_name,
+					isset($field_array['value']) ? $field_array['value'] : '',
+					'0',
+					true
+				);
 				print '</div>';
-			} elseif ($field_array['method'] == 'spacer') {
+			} elseif ($method == 'spacer') {
 				$collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
 
-				print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'') . "' id='row_$field_name'><div class='formHeaderText'>" . html_escape($field_array['friendly_name']);
-				print '<div class="formTooltip">' . (isset($field_array['description']) ? display_tooltip($field_array['description']):'') . '</div>';
-				print ($collapsible ? "<div class='formHeaderAnchor'><i class='fa fa-angle-double-up'></i></div>":'') . '</div></div>';
+				print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'') . "' id='row_$field_name'><div class='formHeaderText'>" . html_escape(isset($field_array['friendly_name']) ? $field_array['friendly_name'] : '');
+				print '<div class="formTooltip">' . (isset($field_array['description']) ? display_tooltip($field_array['description']) : '') . '</div>';
+				print ($collapsible ? "<div class='formHeaderAnchor'><i class='fa fa-angle-double-up'></i></div>" : '') . '</div></div>';
 			} else {
 				// Make a row using a div
 				if (isset($config_array['force_row_color'])) {
 					print "<div id='row_$field_name' class='formRow even-alternate $row_class'>";
 				} else {
 					print "<div id='row_$field_name' class='formRow $row_class'>";
-					if ($row_class == 'even') {
-						$row_class = 'odd';
-					} else {
-						$row_class = 'even';
-					}
+					$row_class = ($row_class == 'even') ? 'odd' : 'even';
 				}
 
 				// Make a form cell
 				print "<div class='formColumnLeft'>";
-
 				print "<div class='formFieldName'>";
 
 				if (isset($field_array['sub_checkbox'])) {
-					form_checkbox($field_array['sub_checkbox']['name'],
-						$field_array['sub_checkbox']['value'],
+					$sc = $field_array['sub_checkbox'];
+					form_checkbox(
+						isset($sc['name']) ? $sc['name'] : '',
+						isset($sc['value']) ? $sc['value'] : '',
 						'',
-						((isset($field_array['sub_checkbox']['default'])) 	? $field_array['sub_checkbox']['default'] : ''),
-						((isset($field_array['sub_checkbox']['form_id'])) 	? $field_array['sub_checkbox']['form_id'] : ''),
-						((isset($field_array['sub_checkbox']['class'])) 	? $field_array['sub_checkbox']['class'] : ''),
-						((isset($field_array['sub_checkbox']['on_change'])) ? $field_array['sub_checkbox']['on_change'] : ''),
-						((isset($field_array['sub_checkbox']['friendly_name'])) ? $field_array['sub_checkbox']['friendly_name'] : ''));
+						isset($sc['default']) ? $sc['default'] : '',
+						isset($sc['form_id']) ? $sc['form_id'] : '',
+						isset($sc['class']) ? $sc['class'] : '',
+						isset($sc['on_change']) ? $sc['on_change'] : '',
+						isset($sc['friendly_name']) ? $sc['friendly_name'] : ''
+					);
 				}
 
-				print html_escape($field_array['friendly_name']);
+				print html_escape(isset($field_array['friendly_name']) ? $field_array['friendly_name'] : '');
 
 				if (read_config_option('hide_form_description') == 'on') {
-					print '<br><span class="formFieldDescription">' . ((isset($field_array['description'])) ? $field_array['description'] : '') . "</span>\n";
+					print '<br><span class="formFieldDescription">' .
+						(isset($field_array['description']) ? $field_array['description'] : '') .
+						"</span>\n";
 				} else {
 					print '<div class="formTooltip">';
-					print display_tooltip((isset($field_array['description'])) ? $field_array['description'] : '');
+					print display_tooltip(isset($field_array['description']) ? $field_array['description'] : '');
 					print '</div>';
 				}
 
-				print '</div>';
+				print '</div>'; // close formFieldName
+				print '</div>'; // close formColumnLeft
 
-				// End form cell
-				print '</div>';
-
-				// New form column for content
+				// Right column
 				print '<div class="formColumnRight"><div class="formData">';
-
 				draw_edit_control($field_name, $field_array);
+				print '</div></div>'; // close formData + formColumnRight
 
-				// End content column
-				print '</div></div>';
-
-				// End form row
-				print '</div>';
+				print '</div>'; // close formRow
 			}
 
 			$i++;

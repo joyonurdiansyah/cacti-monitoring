@@ -1,0 +1,14 @@
+{
+    "require": {
+        "php": "^7.4",
+        "cboden/ratchet": "^0.4.4",
+        "phpoffice/phpspreadsheet": "1.21",
+        "maennchen/zipstream-php": "^2.1",
+        "psr/http-message": "^1.0"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4.11"
+        }
+    }
+}

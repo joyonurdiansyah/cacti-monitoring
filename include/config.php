@@ -38,6 +38,8 @@ $database_ssl_key  = '';
 $database_ssl_cert = '';
 $database_ssl_ca   = '';
 
+$config['plugin'] = true;
+
 /*
  * When the cacti server is a remote poller, then these entries point to
  * the main cacti server. Otherwise, these variables have no use and
