@@ -29,6 +29,29 @@ function render_external_links($style = 'FRONT') {
     } 
 } 
 
+function format_period_date_range($period) {
+    $now = time();
+    $periods = array(
+        'daily' => 86400,
+        'weekly' => 604800,
+        'monthly' => 2592000,
+        'yearly' => 31536000
+    );
+    
+    $period_seconds = isset($periods[$period]) ? $periods[$period] : 86400;
+    $start_time = $now - $period_seconds;
+    
+    $start_date = date('d M Y', $start_time);
+    $end_date = date('d M Y', $now);
+    
+    // If it's the same day, show only one date
+    if ($start_date === $end_date) {
+        return $start_date;
+    }
+    
+    return $start_date . ' - ' . $end_date;
+}
+
 function get_host_downtime_details($host_id, $period = 'daily') {
     global $config;
     $now = time();
@@ -40,10 +63,14 @@ function get_host_downtime_details($host_id, $period = 'daily') {
     );
     $period_seconds = isset($periods[$period]) ? $periods[$period] : 86400;
     $start_time = $now - $period_seconds;
+    
+    // Add date range information
+    $date_range = format_period_date_range($period);
+    
     $current_host = db_fetch_row_prepared("
         SELECT id, hostname, description, status, status_event_count, 
-               status_fail_date, status_rec_date, snmp_community, snmp_version,
-               availability, cur_time, avg_time, total_polls, failed_polls
+                status_fail_date, status_rec_date, snmp_community, snmp_version,
+                availability, cur_time, avg_time, total_polls, failed_polls
         FROM host 
         WHERE id = ?", array($host_id));
     if (!$current_host) {
@@ -52,9 +79,12 @@ function get_host_downtime_details($host_id, $period = 'daily') {
             'downtime_incidents' => 0,
             'downtime_details' => array(),
             'period_seconds' => $period_seconds,
-            'current_status' => 0
+            'current_status' => 0,
+            'date_range' => $date_range,
+            'period_name' => ucfirst($period)
         );
     }
+    
     $total_downtime = 0;
     $downtime_incidents = array();
     $availability_percent = 0;
@@ -73,8 +103,8 @@ function get_host_downtime_details($host_id, $period = 'daily') {
     if ($current_host['status_fail_date'] && $current_host['status_fail_date'] != '0000-00-00 00:00:00') {
         $fail_time = strtotime($current_host['status_fail_date']);
         $rec_time = $current_host['status_rec_date'] && $current_host['status_rec_date'] != '0000-00-00 00:00:00' 
-                   ? strtotime($current_host['status_rec_date']) 
-                   : $now;
+                ? strtotime($current_host['status_rec_date']) 
+                : $now;
         if ($fail_time >= $start_time) {
             $downtime_duration = $rec_time - $fail_time;
             $downtime_incidents[] = array(
@@ -111,7 +141,9 @@ function get_host_downtime_details($host_id, $period = 'daily') {
         'failed_polls' => $current_host['failed_polls'],
         'response_time' => $current_host['cur_time'],
         'avg_response_time' => $current_host['avg_time'],
-        'host_info' => $current_host
+        'host_info' => $current_host,
+        'date_range' => $date_range,
+        'period_name' => ucfirst($period)
     );
 }
 
@@ -137,7 +169,9 @@ function get_host_availability_data($host_id, $period = 'daily') {
         'total_polls' => $downtime_info['total_polls'],
         'failed_polls' => $downtime_info['failed_polls'],
         'polling_success_rate' => $downtime_info['total_polls'] > 0 ? 
-            round((($downtime_info['total_polls'] - $downtime_info['failed_polls']) / $downtime_info['total_polls']) * 100, 2) : 0
+            round((($downtime_info['total_polls'] - $downtime_info['failed_polls']) / $downtime_info['total_polls']) * 100, 2) : 0,
+        'date_range' => $downtime_info['date_range'],
+        'period_name' => $downtime_info['period_name']
     );
 }
 
@@ -205,7 +239,9 @@ function render_availability_dashboard_accordion() {
     $avg_availability = $total_hosts > 0 ? round($total_availability / $total_hosts, 2) : 0;
     ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <link rel="stylesheet" href="dashboard.css">
 <div class="dashboard-container">
     <div class="dashboard-header">
@@ -218,6 +254,29 @@ function render_availability_dashboard_accordion() {
         <a href="?period=monthly" class="<?php echo $period == 'monthly' ? 'active' : ''; ?>"><i class="fa fa-calendar-alt"></i> Monthly</a>
         <a href="?period=yearly" class="<?php echo $period == 'yearly' ? 'active' : ''; ?>"><i class="fa fa-calendar"></i> Yearly</a>
     </div> -->
+    <div style="margin-bottom: 20px;">
+    <button id="exportCsvBtn" onclick="exportToCSV()" style="
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(40, 167, 69, 0.4)'" 
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(40, 167, 69, 0.3)'"
+        onmousedown="this.style.transform='translateY(0)'"
+        onmouseup="this.style.transform='translateY(-2px)'">
+            <i class="fa fa-download" style="font-size: 16px;"></i>
+            Export to CSV
+        </button>
+    </div>
     <div class="stats-grid">
         <div class="stat-card"><div class="stat-value"><?php echo $total_hosts; ?></div><div class="stat-label">Total Devices</div></div>
         <div class="stat-card"><div class="stat-value"><?php echo $up_hosts; ?></div><div class="stat-label">Online Devices</div></div>
@@ -225,6 +284,38 @@ function render_availability_dashboard_accordion() {
         <div class="stat-card info"><div class="stat-value"><?php echo $disabled_hosts; ?></div><div class="stat-label">Disabled Devices</div></div>
         <div class="stat-card <?php echo $avg_availability < 95 ? 'warning' : ''; ?>"><div class="stat-value"><?php echo $avg_availability; ?>%</div><div class="stat-label">Average Availability</div></div>
     </div>
+    <div class="filter-container" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+        <input type="text" id="searchHost" placeholder="🔍 Search Device Name or IP Address..." style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; min-width: 280px;">
+        <select id="statusFilter" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc;">
+            <option value="">All Status</option>
+            <option value="Up">Up</option>
+            <option value="Down">Down</option>
+            <option value="Recovering">Recovering</option>
+            <option value="Unknown">Unknown</option>
+        </select>
+        <select id="availabilityFilter" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc;">
+            <option value="">All Availability</option>
+            <option value="99">>= 99%</option>
+            <option value="95">>= 95%</option>
+            <option value="90">>= 90%</option>
+            <option value="0">< 90%</option>
+        </select>
+        <button onclick="clearAllFilters()" style="
+            padding: 8px 16px; 
+            border-radius: 6px; 
+            border: 1px solid #6c757d; 
+            background: #6c757d; 
+            color: white; 
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        " onmouseover="this.style.background='#5a6268'" onmouseout="this.style.background='#6c757d'">
+            <i class="fa fa-times"></i> Clear Filters
+        </button>
+    </div>
+
     <div id="accordion-dashboard">
     <?php foreach($hosts_data as $row): 
         $host_id = $row['host']['id'];
@@ -236,7 +327,15 @@ function render_availability_dashboard_accordion() {
         $status_text = get_host_status_text($current_period_data['status']);
         $status_icon = $current_period_data['status'] == 3 ? 'fa-check-circle' : 'fa-times-circle';
     ?>
-        <div class="accordion" id="device_<?php echo $host_id; ?>">
+        <div class="accordion" id="device_<?php echo $host_id; ?>"
+            data-host="<?php echo $desc; ?>"
+            data-ip="<?php echo $ip; ?>"
+            data-availability="<?php echo $current_period_data['availability_percent']; ?>"
+            data-downtime="<?php echo format_downtime_duration($current_period_data['downtime_seconds']); ?>"
+            data-incidents="<?php echo $current_period_data['downtime_incidents']; ?>"
+            data-status="<?php echo get_host_status_text($current_period_data['status']); ?>"
+        >
+
             <div class="accordion-header" onclick="toggleAccordion(this)">
                 <span>
                     <i class="fa fa-server"></i> 
@@ -253,7 +352,10 @@ function render_availability_dashboard_accordion() {
             <div class="accordion-content">
                 <div class="device-info-grid">
                     <div class="info-card">
-                        <h4><i class="fa fa-chart-pie"></i> Status Periode <?php echo ucfirst($period); ?></h4>
+                        <h4><i class="fa fa-chart-pie"></i> Status Periode <?php echo $current_period_data['period_name']; ?></h4>
+                        <div class="period-info" style="background: #e9ecef; padding: 8px; border-radius: 4px; margin-bottom: 15px;">
+                            <strong>Periode:</strong> <?php echo $current_period_data['date_range']; ?>
+                        </div>
                         <div class="chart-container">
                             <canvas id="pie_<?php echo $host_id; ?>_<?php echo $period; ?>" width="120" height="120"></canvas>
                         </div>
@@ -269,16 +371,20 @@ function render_availability_dashboard_accordion() {
                             <div><strong>Failed Polls:</strong> <?php echo $current_period_data['failed_polls']; ?></div>
                             <div><strong>Polling Success Rate:</strong> <?php echo $current_period_data['polling_success_rate']; ?>%</div>
                         </div>
+                        
+                        <!-- Updated downtime info section with date range -->
                         <div class="downtime-info <?php echo $current_period_data['downtime_seconds'] == 0 ? 'no-downtime' : ''; ?>">
+                            <div><strong>Periode Monitoring:</strong> <?php echo $current_period_data['date_range']; ?></div>
                             <div><strong>Total Downtime:</strong> <?php echo format_downtime_duration($current_period_data['downtime_seconds']); ?></div>
                             <div><strong>Jumlah Incidents:</strong> <?php echo $current_period_data['downtime_incidents']; ?></div>
                             <?php if ($current_period_data['downtime_seconds'] > 0 && $current_period_data['downtime_incidents'] > 0): ?>
                             <div><strong>Rata-rata per incident:</strong> <?php echo format_downtime_duration($current_period_data['downtime_seconds'] / $current_period_data['downtime_incidents']); ?></div>
                             <?php endif; ?>
                         </div>
+                        
                         <?php if (!empty($current_period_data['downtime_details'])): ?>
                         <div class="downtime-details">
-                            <h5><i class="fa fa-exclamation-triangle"></i> Detail Downtime Incidents:</h5>
+                            <h5><i class="fa fa-exclamation-triangle"></i> Detail Downtime Incidents (<?php echo $current_period_data['date_range']; ?>):</h5>
                             <?php foreach($current_period_data['downtime_details'] as $incident): ?>
                             <div class="downtime-incident">
                                 <div><strong>Mulai:</strong> <?php echo $incident['start_time']; ?></div>
@@ -343,6 +449,9 @@ function render_availability_dashboard_accordion() {
                     <?php foreach(array('daily', 'weekly', 'monthly', 'yearly') as $p): ?>
                     <div class="period-chart">
                         <h5><?php echo ucfirst($p); ?></h5>
+                        <div class="period-date-range" style="font-size: 0.8em; color: #666; margin-bottom: 8px;">
+                            <?php echo $ps[$p]['date_range']; ?>
+                        </div>
                         <div class="chart-container">
                             <canvas id="pie_<?php echo $host_id; ?>_<?php echo $p; ?>" width="80" height="80"></canvas>
                         </div>
@@ -446,9 +555,472 @@ if (document.getElementById('menu_main_console')) {
         }, 100);
     });
 }
+
+// Fallback function untuk CSV export jika XLSX gagal
+// CSV export function
+// Enhanced CSV export function with detailed downtime information
+function exportToCSV() {
+    try {
+        var csvContent = [];
+        
+        // Enhanced headers with more detailed information
+        var headers = [
+            "Device Name", 
+            "IP Address", 
+            "Period Type",
+            "Period Date Range",
+            "Current Status",
+            "Availability (%)",
+            "Total Downtime Duration",
+            "Downtime Incidents Count",
+            "Response Time (ms)",
+            "Avg Response Time (ms)",
+            "Total Polls",
+            "Failed Polls",
+            "Polling Success Rate (%)",
+            "Downtime Start DateTime",
+            "Downtime End DateTime", 
+            "Downtime Duration Detail",
+            "Incident Status",
+            "Event Count"
+        ];
+        
+        csvContent.push(headers.join(","));
+        
+        // Get all accordion elements
+        var accordions = document.querySelectorAll('.accordion');
+        
+        accordions.forEach(function(acc) {
+            // Get basic device information
+            var deviceName = (acc.getAttribute('data-host') || '').replace(/"/g, '""');
+            var ipAddress = (acc.getAttribute('data-ip') || '').replace(/"/g, '""');
+            var currentStatus = (acc.getAttribute('data-status') || '').replace(/"/g, '""');
+            var availability = (acc.getAttribute('data-availability') || '').replace(/"/g, '""');
+            var totalDowntime = (acc.getAttribute('data-downtime') || '').replace(/"/g, '""');
+            var incidentsCount = (acc.getAttribute('data-incidents') || '').replace(/"/g, '""');
+            
+            // Extract detailed information from the accordion content
+            var content = acc.querySelector('.accordion-content');
+            if (content) {
+                // Get period information for all periods (daily, weekly, monthly, yearly)
+                var periodCharts = content.querySelectorAll('.period-chart');
+                
+                // If no period charts, get current period info
+                if (periodCharts.length === 0) {
+                    // Get current period data from the main info card
+                    var infoCard = content.querySelector('.info-card');
+                    if (infoCard) {
+                        var periodInfo = extractPeriodInfo(infoCard, 'current');
+                        var downtimeDetails = extractDowntimeDetails(content);
+                        
+                        if (downtimeDetails.length > 0) {
+                            // Create row for each downtime incident
+                            downtimeDetails.forEach(function(incident) {
+                                addCSVRow(csvContent, deviceName, ipAddress, periodInfo, incident);
+                            });
+                        } else {
+                            // No downtime incidents, add single row with basic info
+                            var emptyIncident = {
+                                startTime: 'No Downtime',
+                                endTime: 'No Downtime',
+                                duration: '0 detik',
+                                status: currentStatus,
+                                eventCount: '0'
+                            };
+                            addCSVRow(csvContent, deviceName, ipAddress, periodInfo, emptyIncident);
+                        }
+                    }
+                } else {
+                    // Process each period (daily, weekly, monthly, yearly)
+                    periodCharts.forEach(function(chart) {
+                        var periodType = chart.querySelector('h5').textContent.trim();
+                        var periodDateRange = chart.querySelector('.period-date-range');
+                        var dateRange = periodDateRange ? periodDateRange.textContent.trim() : 'Unknown';
+                        
+                        var periodInfo = {
+                            type: periodType,
+                            dateRange: dateRange,
+                            availability: extractTextFromElement(chart, 'strong'),
+                            downtime: extractDowntimeFromChart(chart),
+                            incidents: extractIncidentsFromChart(chart),
+                            polls: extractPollsFromChart(chart),
+                            responseTime: 'N/A',
+                            avgResponseTime: 'N/A',
+                            successRate: 'N/A'
+                        };
+                        
+                        // For historical periods, we might not have detailed downtime info
+                        // so we add a summary row
+                        var summaryIncident = {
+                            startTime: 'Period Summary',
+                            endTime: 'Period Summary', 
+                            duration: periodInfo.downtime,
+                            status: currentStatus,
+                            eventCount: periodInfo.incidents
+                        };
+                        
+                        addCSVRow(csvContent, deviceName, ipAddress, periodInfo, summaryIncident);
+                    });
+                }
+                
+                // Also add current detailed status if available
+                var currentStatusDetail = content.querySelector('.info-card');
+                if (currentStatusDetail) {
+                    var currentPeriodInfo = extractCurrentPeriodDetailedInfo(currentStatusDetail);
+                    var downtimeDetails = extractDowntimeDetails(content);
+                    
+                    if (downtimeDetails.length > 0) {
+                        downtimeDetails.forEach(function(incident) {
+                            addCSVRow(csvContent, deviceName, ipAddress, currentPeriodInfo, incident);
+                        });
+                    }
+                }
+            }
+        });
+        
+        // Create and download CSV
+        var csvString = csvContent.join("\n");
+        var blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        
+        // Generate filename with current date and time
+        var now = new Date();
+        var filename = 'cacti_detailed_monitoring_' + 
+                    now.getFullYear() + 
+                    ('0' + (now.getMonth() + 1)).slice(-2) + 
+                    ('0' + now.getDate()).slice(-2) + '_' +
+                    ('0' + now.getHours()).slice(-2) + 
+                    ('0' + now.getMinutes()).slice(-2) + 
+                    '.csv';
+        
+        // Create download link
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            // For IE
+            window.navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            var link = document.createElement('a');
+            if (link.download !== undefined) {
+                var url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success message
+                showExportMessage('Detailed CSV file exported successfully: ' + filename, 'success');
+            }
+        }
+        
+    } catch (error) {
+        console.error('Enhanced CSV Export error:', error);
+        showExportMessage('Failed to export detailed CSV file: ' + error.message, 'error');
+    }
+}
+
+// Helper function to add CSV row
+function addCSVRow(csvContent, deviceName, ipAddress, periodInfo, incident) {
+    var row = [
+        '"' + deviceName + '"',
+        '"' + ipAddress + '"',
+        '"' + (periodInfo.type || 'Current') + '"',
+        '"' + (periodInfo.dateRange || 'N/A') + '"',
+        '"' + (incident.status || 'Unknown') + '"',
+        '"' + (periodInfo.availability || 'N/A') + '"',
+        '"' + (periodInfo.downtime || 'N/A') + '"',
+        '"' + (periodInfo.incidents || 'N/A') + '"',
+        '"' + (periodInfo.responseTime || 'N/A') + '"',
+        '"' + (periodInfo.avgResponseTime || 'N/A') + '"',
+        '"' + (periodInfo.polls || 'N/A') + '"',
+        '"' + (periodInfo.failedPolls || 'N/A') + '"',
+        '"' + (periodInfo.successRate || 'N/A') + '"',
+        '"' + (incident.startTime || 'N/A') + '"',
+        '"' + (incident.endTime || 'N/A') + '"',
+        '"' + (incident.duration || 'N/A') + '"',
+        '"' + (incident.status || 'N/A') + '"',
+        '"' + (incident.eventCount || 'N/A') + '"'
+    ];
+    
+    csvContent.push(row.join(","));
+}
+
+// Helper function to extract current period detailed information
+function extractCurrentPeriodDetailedInfo(infoCard) {
+    var periodInfo = {};
+    
+    // Extract period type and date range
+    var periodElement = infoCard.querySelector('h4');
+    if (periodElement) {
+        periodInfo.type = periodElement.textContent.replace(/.*Status Periode\s+/, '').trim();
+    }
+    
+    var periodDateElement = infoCard.querySelector('.period-info');
+    if (periodDateElement) {
+        periodInfo.dateRange = periodDateElement.textContent.replace('Periode:', '').trim();
+    }
+    
+    // Extract availability
+    var availabilityElement = infoCard.querySelector('strong');
+    if (availabilityElement && availabilityElement.textContent.includes('Availability:')) {
+        periodInfo.availability = availabilityElement.textContent.replace('Availability:', '').trim();
+    }
+    
+    // Extract detailed status information
+    var statusDetails = infoCard.querySelectorAll('div');
+    statusDetails.forEach(function(detail) {
+        var text = detail.textContent;
+        if (text.includes('Response Time:')) {
+            periodInfo.responseTime = text.replace('Response Time:', '').trim();
+        } else if (text.includes('Avg Response Time:')) {
+            periodInfo.avgResponseTime = text.replace('Avg Response Time:', '').trim();
+        } else if (text.includes('Total Polls:')) {
+            periodInfo.polls = text.replace('Total Polls:', '').trim();
+        } else if (text.includes('Failed Polls:')) {
+            periodInfo.failedPolls = text.replace('Failed Polls:', '').trim();
+        } else if (text.includes('Polling Success Rate:')) {
+            periodInfo.successRate = text.replace('Polling Success Rate:', '').trim();
+        } else if (text.includes('Total Downtime:')) {
+            periodInfo.downtime = text.replace('Total Downtime:', '').trim();
+        } else if (text.includes('Jumlah Incidents:')) {
+            periodInfo.incidents = text.replace('Jumlah Incidents:', '').trim();
+        }
+    });
+    
+    return periodInfo;
+}
+
+// Helper function to extract downtime details
+function extractDowntimeDetails(content) {
+    var downtimeDetails = [];
+    var downtimeIncidents = content.querySelectorAll('.downtime-incident');
+    
+    downtimeIncidents.forEach(function(incident) {
+        var detail = {};
+        var details = incident.querySelectorAll('div');
+        
+        details.forEach(function(detailDiv) {
+            var text = detailDiv.textContent;
+            if (text.includes('Mulai:')) {
+                detail.startTime = text.replace('Mulai:', '').trim();
+            } else if (text.includes('Selesai:')) {
+                detail.endTime = text.replace('Selesai:', '').trim();
+            } else if (text.includes('Durasi:')) {
+                detail.duration = text.replace('Durasi:', '').trim();
+            } else if (text.includes('Status:')) {
+                detail.status = text.replace('Status:', '').trim();
+            } else if (text.includes('Event Count:')) {
+                detail.eventCount = text.replace('Event Count:', '').trim();
+            }
+        });
+        
+        downtimeDetails.push(detail);
+    });
+    
+    return downtimeDetails;
+}
+
+// Helper function to extract text from element
+function extractTextFromElement(parent, selector) {
+    var element = parent.querySelector(selector);
+    return element ? element.textContent.trim() : 'N/A';
+}
+
+// Helper function to extract downtime from chart
+function extractDowntimeFromChart(chart) {
+    var smalls = chart.querySelectorAll('small');
+    for (var i = 0; i < smalls.length; i++) {
+        if (smalls[i].textContent.includes('Down:')) {
+            return smalls[i].textContent.replace('Down:', '').trim();
+        }
+    }
+    return 'N/A';
+}
+
+// Helper function to extract incidents from chart
+function extractIncidentsFromChart(chart) {
+    var smalls = chart.querySelectorAll('small');
+    for (var i = 0; i < smalls.length; i++) {
+        if (smalls[i].textContent.includes('Incidents:')) {
+            return smalls[i].textContent.replace('Incidents:', '').trim();
+        }
+    }
+    return 'N/A';
+}
+
+// Helper function to extract polls from chart
+function extractPollsFromChart(chart) {
+    var smalls = chart.querySelectorAll('small');
+    for (var i = 0; i < smalls.length; i++) {
+        if (smalls[i].textContent.includes('Polls:')) {
+            return smalls[i].textContent.replace('Polls:', '').trim();
+        }
+    }
+    return 'N/A';
+}
+
+// Helper function to extract period info
+function extractPeriodInfo(infoCard, type) {
+    return {
+        type: type,
+        dateRange: 'Current Period',
+        availability: 'N/A',
+        downtime: 'N/A',
+        incidents: 'N/A',
+        polls: 'N/A',
+        failedPolls: 'N/A',
+        responseTime: 'N/A',
+        avgResponseTime: 'N/A',
+        successRate: 'N/A'
+    };
+}
+
+// Function to show export messages (keeping the original)
+function showExportMessage(message, type) {
+    var messageDiv = document.createElement('div');
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        z-index: 9999;
+        max-width: 300px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+    `;
+    
+    if (type === 'success') {
+        messageDiv.style.backgroundColor = '#28a745';
+        messageDiv.innerHTML = '<i class="fa fa-check-circle" style="margin-right: 8px;"></i>' + message;
+    } else {
+        messageDiv.style.backgroundColor = '#dc3545';
+        messageDiv.innerHTML = '<i class="fa fa-exclamation-triangle" style="margin-right: 8px;"></i>' + message;
+    }
+    
+    document.body.appendChild(messageDiv);
+    
+    // Auto remove after 5 seconds
+    setTimeout(function() {
+        messageDiv.style.opacity = '0';
+        messageDiv.style.transform = 'translateX(100%)';
+        setTimeout(function() {
+            if (messageDiv.parentNode) {
+                document.body.removeChild(messageDiv);
+            }
+        }, 300);
+    }, 5000);
+    
+    // Remove on click
+    messageDiv.onclick = function() {
+        messageDiv.style.opacity = '0';
+        messageDiv.style.transform = 'translateX(100%)';
+        setTimeout(function() {
+            if (messageDiv.parentNode) {
+                document.body.removeChild(messageDiv);
+            }
+        }, 300);
+    };
+}
+
+// Filtering function - REPLACE the existing filterAccordion function
+function filterAccordion() {
+    const searchText = document.getElementById('searchHost').value.toLowerCase().trim();
+    const statusVal = document.getElementById('statusFilter').value.trim();
+    const availVal = document.getElementById('availabilityFilter').value.trim();
+
+    document.querySelectorAll('.accordion').forEach(acc => {
+        const host = (acc.getAttribute('data-host') || '').toLowerCase();
+        const ip = (acc.getAttribute('data-ip') || '').toLowerCase();
+        const status = (acc.getAttribute('data-status') || '').trim();
+        const availability = parseFloat(acc.getAttribute('data-availability')) || 0;
+
+        let match = true;
+
+        // Filter by search text (search in both hostname and IP)
+        if (searchText) {
+            const searchMatch = host.includes(searchText) || ip.includes(searchText);
+            if (!searchMatch) match = false;
+        }
+
+        // Filter by status (empty means show all)
+        if (statusVal && statusVal !== '' && status !== statusVal) {
+            match = false;
+        }
+
+        // Filter by availability (empty means show all)
+        if (availVal && availVal !== '') {
+            if (availVal === '99' && availability < 99) match = false;
+            else if (availVal === '95' && availability < 95) match = false;
+            else if (availVal === '90' && availability < 90) match = false;
+            else if (availVal === '0' && availability >= 90) match = false;
+        }
+
+        acc.style.display = match ? 'block' : 'none';
+    });
+
+    // Update results count
+    updateFilterResults();
+}
+
+// Add this new function to show filter results count
+function updateFilterResults() {
+    const totalDevices = document.querySelectorAll('.accordion').length;
+    const visibleDevices = document.querySelectorAll('.accordion[style="display: block"], .accordion:not([style*="display: none"])').length;
+    
+    let resultDiv = document.getElementById('filter-results');
+    if (!resultDiv) {
+        resultDiv = document.createElement('div');
+        resultDiv.id = 'filter-results';
+        resultDiv.style.cssText = `
+            margin: 10px 0;
+            padding: 8px 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #495057;
+        `;
+        
+        const filterContainer = document.querySelector('.filter-container');
+        filterContainer.parentNode.insertBefore(resultDiv, filterContainer.nextSibling);
+    }
+    
+    if (visibleDevices === totalDevices) {
+        resultDiv.innerHTML = `<i class="fa fa-info-circle"></i> Showing all ${totalDevices} devices`;
+    } else {
+        resultDiv.innerHTML = `<i class="fa fa-filter"></i> Showing ${visibleDevices} of ${totalDevices} devices`;
+    }
+}
+
+// Clear all filters function
+function clearAllFilters() {
+    document.getElementById('searchHost').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('availabilityFilter').value = '';
+    filterAccordion();
+}
+
+// REPLACE the existing DOMContentLoaded event listener for filters
+document.addEventListener('DOMContentLoaded', function() {
+    // Attach filter listeners
+    ['searchHost', 'statusFilter', 'availabilityFilter'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('input', filterAccordion);
+            element.addEventListener('change', filterAccordion);
+            element.addEventListener('keyup', filterAccordion);
+        }
+    });
+    
+    // Initial filter results display
+    setTimeout(updateFilterResults, 100);
+});
+
 </script>
 <?php
 }
+
 render_external_links('FRONTTOP'); 
 if (read_config_option('hide_console') != 'on') { 
 ?> 
